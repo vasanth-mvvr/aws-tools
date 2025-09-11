@@ -40,12 +40,12 @@ module "nexus" {
   vpc_security_group_ids = ["sg-0aaab2bdfa4e9f45a"]
   subnet_id = "subnet-0d91ae6100b003216"
   ami = data.aws_ami.nexus_ami_info.id
-  root_block_device = [
-    {
+  root_block_device = {
+    
         volume_type = "gp3"
         volume_size = 30
-    }
-  ]
+    
+  }
   tags = merge(
     var.common_tags,
     {
