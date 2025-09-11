@@ -2,8 +2,8 @@ module "jenkins" {
     source = "terraform-aws-modules/ec2-instance/aws"
     name = "jenkins"
     instance_type = "t2.micro"
-    vpc_security_group_ids = []
-    subnet_id = ""
+    vpc_security_group_ids = ["sg-0aaab2bdfa4e9f45a"]
+    subnet_id = "subnet-0d91ae6100b003216"
     user_data = file("master.sh")
     ami = data.aws_ami.ami_info.id
     tags = merge(
@@ -17,8 +17,8 @@ module "jenkins-agent" {
     source = "terraform-aws-modules/ec2-instance/aws"
     name = "jenkins-node"
     instance_type = "t2.micro"
-    vpc_security_group_ids = []
-    subnet_id = ""
+    vpc_security_group_ids = ["sg-0aaab2bdfa4e9f45a"]
+    subnet_id = "subnet-0d91ae6100b003216"
     user_data = file("master-agent.sh")
     ami = data.aws_ami.ami_info.id
     tags = merge(
@@ -30,16 +30,16 @@ module "jenkins-agent" {
 }
 resource "aws_key_pair" "tools" {
   key_name = "tools"
-  public_key = file("~/.ssh/tools.pub")
+  public_key = file("~/.ssh/nexus.pub")
 }
 
 module "nexus" {
   source = "terraform-aws-modules/ec2-instance/aws"
-  instance_type = "t2.micro"
+  instance_type = "t3.medium"
   key_name = aws_key_pair.tools.key_name
-  vpc_security_group_ids = []
-  subnet_id = ""
-  ami = data.aws_ami.ami_info.id
+  vpc_security_group_ids = ["sg-0aaab2bdfa4e9f45a"]
+  subnet_id = "subnet-0d91ae6100b003216"
+  ami = data.aws_ami.nexus_ami_info.id
   root_block_device = [
     {
         volume_type = "gp3"
