@@ -39,6 +39,7 @@ module "nexus" {
   key_name = aws_key_pair.tools.key_name
   vpc_security_group_ids = ["sg-0aaab2bdfa4e9f45a"]
   subnet_id = "subnet-0d91ae6100b003216"
+#   user_data = file("nexus.sh")
   ami = data.aws_ami.nexus_ami_info.id
   root_block_device = {
     
